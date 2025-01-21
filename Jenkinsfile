@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = 'flask-app'  // Name of the Docker image
         K8S_NAMESPACE = 'my-app'    // Kubernetes namespace
     }
-
+stages{
     stage('Checkout') {
     steps {
         git credentialsId: 'github-credentials', url: 'https://github.com/mAdo583/flask-ci-cd.git'
