@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'flask-app'  // Name of the Docker image
-        K8S_NAMESPACE = 'my-app'    // Kubernetes namespace
+        DOCKER_IMAGE = 'mado583/flask-app'  // Updated to include your Docker Hub username
+        K8S_NAMESPACE = 'my-app'            // Kubernetes namespace
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
@@ -18,6 +18,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+                    // Build the Docker image and tag it with the correct Docker Hub repo
                     docker.build("${DOCKER_IMAGE}")
                 }
             }
@@ -27,8 +28,9 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     script {
+                        // Log in to DockerHub and push the image
                         docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-                            docker.image("${DOCKER_IMAGE}").push()
+                            docker.image("${DOCKER_IMAGE}").push('latest')  // Make sure to push with a tag like 'latest'
                         }
                     }
                 }
