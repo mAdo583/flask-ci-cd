@@ -39,9 +39,17 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                script {
-                    // Apply Kubernetes Deployment YAML in the specified namespace
-                    sh 'kubectl apply -f deployment.yaml --namespace=${K8S_NAMESPACE}'
+                withCredentials([string(credentialsId: 'Kubernetes-Cluster', variable: 'K8S_SECRET')]) {
+                    script {
+                        // Save the Kubernetes config to a temporary location
+                        writeFile(file: '/tmp/kubeconfig', text: K8S_SECRET)
+
+                        // Set the KUBECONFIG environment variable to point to the temporary kubeconfig file
+                        withEnv(["KUBECONFIG=/tmp/kubeconfig"]) {
+                            // Apply Kubernetes Deployment YAML in the specified namespace
+                            sh 'kubectl apply -f deployment.yaml --namespace=${K8S_NAMESPACE}'
+                        }
+                    }
                 }
             }
         }
