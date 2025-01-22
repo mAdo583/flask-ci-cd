@@ -39,7 +39,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                withCredentials([string(credentialsId: 'Kubernetes-Cluster', variable: 'K8S_SECRET')]) {
+                withCredentials([string(credentialsId: 'jenkins-k8s-token', variable: 'K8S_SECRET')]) {
                     script {
                         // Save the Kubernetes config to a temporary location
                         writeFile(file: '/tmp/kubeconfig', text: K8S_SECRET)
