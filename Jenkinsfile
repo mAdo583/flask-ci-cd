@@ -41,7 +41,7 @@ pipeline {
             steps {
                 script {
                     // Apply Kubernetes Deployment YAML in the specified namespace
-                    sh 'kubectl apply -f k8s/deployment.yaml --namespace=${K8S_NAMESPACE}'
+                    sh 'kubectl apply -f deployment.yaml --namespace=${K8S_NAMESPACE}'
                 }
             }
         }
